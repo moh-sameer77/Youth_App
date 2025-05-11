@@ -4,69 +4,79 @@ import 'package:flutter_application_1/src/feature/notifications/view/notificatio
 import 'package:get/get.dart';
 import 'package:flutter_application_1/src/config/theme/theme.dart';
 import 'package:flutter_application_1/src/shared/widgets/CustomAppBar.dart';
-import 'package:flutter_application_1/src/feature/packages/view/packages_screen.dart';
 
-class Bottomnavbar extends StatelessWidget {
+class Bottomnavbar extends StatefulWidget {
+  const Bottomnavbar({super.key});
+
+  @override
+  State<Bottomnavbar> createState() => _BottomnavbarState();
+}
+
+class _BottomnavbarState extends State<Bottomnavbar> {
   final NavigationController navController = Get.put(NavigationController());
 
-final List<Widget> _pages = [
-  Center(key: ValueKey('home'), child: Text("Home Page")),
-  Center(key: ValueKey('search'), child: Text("Search Page")),
-  PackagesScreen(key: ValueKey('packages')),
-  Center(key: ValueKey('coverage'), child: Text("Coverage")),
-  Center(key: ValueKey('profile'), child: Text("Profile")),
-];
-
-  final List<String> _titles = [
-    "My Leads",
-    "New Lead",
-    "Packages",
-    "Coverage",
-    "Menu",
-    "Notifications",
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      int selectedIndex = navController.currentIndex.value;
+    return WillPopScope(
+      onWillPop: () async {
+        if (navController.showNotifications.value) {
+          navController.toggleNotifications();
+          return false; 
+        }
+        else if(navController.currentIndex.value == 0) {
+          return true; 
+        }
+        else if (navController.navigationHistory.length > 1) {
+          navController.goBack();
+          return false; 
+        }
 
-      return Scaffold(
-        appBar: CustomAppBar(title: navController.showNotifications.value? "Notifications" : _titles[selectedIndex]),
-        body: AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: navController.showNotifications.value
-                    ? NotificationsScreen(key: ValueKey('notifications'))
-                    : _pages[selectedIndex],
-              ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: selectedIndex,
-          onTap: navController.changeScreen,
-          selectedItemColor: AppTheme.lightAppColors.primary,
-          unselectedItemColor: AppTheme.lightAppColors.mainTextcolor,
-          backgroundColor: AppTheme.lightAppColors.containercolor,
-          unselectedLabelStyle: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
+        return true;
+      },
+      child: Obx(() {
+        int selectedIndex = navController.currentIndex.value;
+
+        return Scaffold(
+          appBar: CustomAppBar(
+              title: navController.showNotifications.value
+                  ? "Notifications"
+                  : navController.titles[selectedIndex]),
+          body: AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            child: navController.showNotifications.value
+                ? NotificationsScreen(key: ValueKey('notifications'))
+                : navController.pages[selectedIndex],
           ),
-          selectedLabelStyle: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-          items: [
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: selectedIndex,
+            onTap: navController.changeScreen,
+            selectedItemColor: AppTheme.lightAppColors.primary,
+            unselectedItemColor: AppTheme.lightAppColors.mainTextcolor,
+            backgroundColor: AppTheme.lightAppColors.containercolor,
+            unselectedLabelStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+            selectedLabelStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
+            items:  [
             BottomNavigationBarItem(
-              icon: Icon(
-                selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-              ),
+              activeIcon: Icon(Icons.home, size: 28,) ,
+              icon: Icon(Icons.home_outlined),
               label: "Home",
             ),
+            
             BottomNavigationBarItem(
+              activeIcon: Icon(Icons.add_circle, size: 28,),
               icon: Icon(
-                  selectedIndex == 1 ? Icons.add_circle : Icons.add_circle_outline),
+              Icons.add_circle_outline),
               label: "New Lead",
             ),
             BottomNavigationBarItem(
@@ -82,9 +92,10 @@ final List<Widget> _pages = [
               icon: Icon(selectedIndex == 4 ? Icons.close : Icons.menu),
               label: "Menu",
             ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      }),
+    );
   }
 }
