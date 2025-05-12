@@ -22,7 +22,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
       onWillPop: () async {
         if (navController.showNotifications.value) {
           navController.toggleNotifications();
-          return false; 
+          return false;   
         }
         else if(navController.currentIndex.value == 0) {
           return true; 
