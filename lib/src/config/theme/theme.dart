@@ -21,5 +21,13 @@ class AppTheme {
     cancelcolor: const Color(0xffD40D03),
     activatedColor: const Color(0xff00905C),
     createdColor: const Color(0xff6C2F8C),
+    lightPurpleColor: const Color(0xffF2E6F9),
+    lightGreenColor: const Color(0xffE4FAF2),
+    lightRedColor: const Color(0xffFFE2E2),
+    lightYellowColor: const Color(0xffFFF4E1),
+    darkYellowColor: const Color(0xffC38B29),
+    textFieldBorderColor: const Color(0xffEDF1F3),
+    pinkColor: const Color(0xffCF0072),
+    
   );
 }

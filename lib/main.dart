@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/config/localization.dart';
 import 'package:flutter_application_1/src/config/theme/theme.dart';
-import 'package:flutter_application_1/src/feature/notifications/view/notifications_screen.dart';
-import 'package:flutter_application_1/src/feature/packages/view/packages_screen.dart';
-import 'package:flutter_application_1/src/shared/widgets/bottomNavbar.dart';
+import 'package:flutter_application_1/src/feature/login/view/login_screen.dart';
+import 'package:flutter_application_1/src/feature/splash_screen/splash_screen.dart';
+import 'package:flutter_application_1/src/shared/widgets/bottom_nav_bar.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 
@@ -18,15 +20,30 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: Bottomnavbar(),
-      // getPages: [ 
-      //   GetPage(name: '/', page: () => const PackagesScreen()),
-      //   GetPage(name: '/search', page: () => const NotificationsScreen()),
-      //   GetPage(name: '/packages', page: () => const PackagesScreen()),
-      //   GetPage(name: '/coverage', page: () => const PackagesScreen()),
-      //   GetPage(name: '/profile', page: () => const PackagesScreen()),
-      //   GetPage(name: '/notifications', page: () => const NotificationsScreen()),
-      // ],
+      home: SplashScreen(),
+      locale: Locale('en'),
+      supportedLocales: [Locale('en'), Locale('ar')],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      getPages: [
+        GetPage(
+          name: '/splash',
+          page: () => SplashScreen(),
+        ),
+        GetPage(
+          name: '/BottomNavBar',
+          page: () => Bottomnavbar()
+        ),
+        GetPage(
+          name: '/login',
+          page: () => LoginScreen()
+        ),
+        
+      ],
     );
   }
 }
